@@ -1,54 +1,87 @@
 ---
-import '../styles/global.scss';
-import { SiteTitle } from '../consts';
+import siteConfig from '~/site.config'
+import LightDarkAutoButton from '~/components/LightDarkAutoButton.astro'
+import Search from '~/components/Search.astro'
+import SelectTheme from '~/components/SelectTheme.astro'
+import NavLink from '~/components/NavLink.astro'
+
+const lightDarkAutoTheme = siteConfig.themes.mode === 'light-dark-auto'
+const selectTheme =
+  siteConfig.themes.mode === 'select' && siteConfig.themes.include.length > 1
 ---
 
 <header>
-	<nav>
-		<h2 id="site_title">
-			<a href="/">
-				<svg
-					aria-hidden="true"
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					fill="none"
-					><path
-						fill="url(#a)"
-						fill-rule="evenodd"
-						d="M.654 3.276C0 4.56 0 6.24 0 9.6v4.8c0 3.36 0 5.04.654 6.324a6 6 0 0 0 2.622 2.622C4.56 24 6.24 24 9.6 24h4.8c3.36 0 5.04 0 6.324-.654a6 6 0 0 0 2.622-2.622C24 19.44 24 17.76 24 14.4V9.6c0-3.36 0-5.04-.654-6.324A6 6 0 0 0 20.724.654C19.44 0 17.76 0 14.4 0H9.6C6.24 0 4.56 0 3.276.654A6 6 0 0 0 .654 3.276Zm10.875 16.41a.5.5 0 0 0 .942 0l.628-1.754a8 8 0 0 1 4.833-4.833l1.754-.628a.5.5 0 0 0 0-.942l-1.754-.628A8 8 0 0 1 13.1 6.068l-.628-1.754a.5.5 0 0 0-.942 0l-.628 1.754A8 8 0 0 1 6.068 10.9l-1.754.628a.5.5 0 0 0 0 .942l1.754.628a8 8 0 0 1 4.833 4.833l.628 1.754Z"
-						clip-rule="evenodd"></path><path
-						stroke="url(#b)"
-						stroke-opacity=".5"
-						stroke-width=".5"
-						d="M.25 9.6c0-1.684 0-2.932.08-3.92.081-.985.24-1.69.547-2.29A5.75 5.75 0 0 1 3.39.877C3.99.57 4.695.41 5.68.33 6.668.25 7.916.25 9.6.25h4.8c1.684 0 2.932 0 3.92.08.985.081 1.69.24 2.29.547a5.75 5.75 0 0 1 2.513 2.513c.306.6.466 1.305.546 2.29.08.988.081 2.236.081 3.92v4.8c0 1.684 0 2.932-.08 3.92-.081.985-.24 1.69-.547 2.29a5.75 5.75 0 0 1-2.513 2.513c-.6.306-1.305.466-2.29.546-.988.08-2.236.081-3.92.081H9.6c-1.684 0-2.932 0-3.92-.08-.985-.081-1.69-.24-2.29-.547A5.75 5.75 0 0 1 .877 20.61C.57 20.01.41 19.305.33 18.32.25 17.332.25 16.084.25 14.4V9.6Zm11.044 10.17c.237.663 1.175.663 1.412 0l.628-1.753a7.75 7.75 0 0 1 4.683-4.683l1.753-.628c.663-.237.663-1.175 0-1.412l-1.753-.628a7.75 7.75 0 0 1-4.683-4.683l-.628-1.753c-.237-.663-1.175-.663-1.412 0l-.628 1.753a7.75 7.75 0 0 1-4.683 4.683l-1.753.628c-.663.237-.663 1.175 0 1.412l1.753.628a7.75 7.75 0 0 1 4.683 4.683l.628 1.753Z"
-					></path><defs
-						><radialGradient
-							id="a"
-							cx="0"
-							cy="0"
-							r="1"
-							gradientTransform="rotate(-40.136 32.164 11.75) scale(33.3542)"
-							gradientUnits="userSpaceOnUse"
-							><stop offset=".639" stop-color="#9818E7"></stop><stop offset="1" stop-color="#DF7F4F"
-							></stop></radialGradient
-						><linearGradient id="b" x1="12" x2="12" y1="0" y2="24" gradientUnits="userSpaceOnUse"
-							><stop stop-color="#fff"></stop><stop offset="1" stop-color="#fff" stop-opacity="0"
-							></stop></linearGradient
-						></defs
-					></svg
-				>
-				{SiteTitle}
-			</a>
-		</h2>
-		<div class="links">
-			<a href="mailto:contactus@yourwebsite.com">Contact</a>
-		</div>
-	</nav>
+  <div class="relative flex items-center justify-between bg-accent/10 rounded-xl">
+    <a
+      id="logo"
+      href="/"
+      class="block px-4 py-1.5 max-w-full no-underline items-center bg-accent text-background font-bold rounded-xl"
+    >
+      {siteConfig.title}
+    </a>
+    <div class="flex items-center gap-3 sm:mr-3">
+      <Search trailingSlashes={siteConfig.trailingSlashes} />
+      {lightDarkAutoTheme && <LightDarkAutoButton />}
+      {selectTheme && <SelectTheme />}
+      <nav id="nav-mobile" aria-label="Menu" class="p-0 text-accent sm:hidden">
+        <button
+          id="nav-mobile-button"
+          class="px-3 py-1 h-full cursor-pointer border-2 rounded-xl bg-background"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-menu-list"
+        >
+          ▾
+        </button>
+        <ul
+          id="nav-mobile-list"
+          class="invisible absolute flex flex-col bg-background shadow text-accent border-2 m-0 p-2.5 top-11.5 left-auto right-0 z-50 rounded-xl"
+        >
+          {
+            siteConfig.navLinks.map((link) => (
+              <li class="p-1" aria-expanded="false">
+                <NavLink link={link} />
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <nav aria-label="Menu" class="p-0 mt-4 ml-0.5 text-accent hidden sm:block">
+    <ul class="flex flex-row text-accent">
+      {
+        siteConfig.navLinks.map((link) => (
+          <li class="mr-5" aria-expanded="true">
+            <NavLink link={link} />
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
 </header>
 
-<style>
-	.links a {
-		text-decoration: none;
-	}
-</style>
+<script>
+  const navMobileButton = document.getElementById('nav-mobile-button')
+  const navMobileList = document.getElementById('nav-mobile-list')
+  const navMobileListItems = navMobileList?.querySelectorAll('li')
+  const toggleNavMobileMenu = (action: 'on' | 'off' | 'toggle') => {
+    let isNowOpen: boolean = false
+    if (action === 'on') {
+      isNowOpen = true
+      navMobileList?.classList.remove('invisible')
+    } else if (action === 'off') {
+      isNowOpen = false
+      navMobileList?.classList.add('invisible')
+    } else {
+      isNowOpen = !navMobileList?.classList.toggle('invisible')
+    }
+    navMobileButton?.setAttribute('aria-expanded', isNowOpen ? 'true' : 'false')
+    navMobileListItems?.forEach((listItem) => {
+      listItem.setAttribute('aria-expanded', isNowOpen ? 'true' : 'false')
+    })
+  }
+  navMobileButton?.addEventListener('click', (_ev) => {
+    toggleNavMobileMenu('toggle')
+  })
+</script>
